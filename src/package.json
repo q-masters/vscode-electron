@@ -16,20 +16,24 @@
   "categories": [
     "Other"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/q-masters/vscode-electron"
+  },
   "activationEvents": [
-    "onCommand:qmasters:install.electron",
-    "onCommand:qmasters:run.electron"
+    "onCommand:qmasters:electron.install",
+    "onCommand:qmasters:electron.run"
   ],
   "publisher": "qmasters",
   "contributes": {
     "commands": [
       {
-        "command": "qmasters:install.electron",
+        "command": "qmasters:electron.install",
         "title": "install electron",
         "category": "QMasters"
       },
       {
-        "command": "qmasters:run.electron",
+        "command": "qmasters:electron.run",
         "title": "run electron app",
         "category": "QMasters"
       }
