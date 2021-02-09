@@ -8,8 +8,7 @@
     "vscode:prepublish": "rimraf ./dist && webpack --config ./bin/webpack-prod.config.js",
     "prebuild": "rimraf ./dist",
     "prestart": "rimraf ./dist",
-    "build": "webpack --config ./bin/webpack.config.js",
-    "start": "webpack --config ./bin/webpack.config.js && electron ./dist/electron-app.js"
+    "build": "webpack --config ./bin/webpack.config.js"
   },
   "engines": {
     "vscode": "^1.52.0"
@@ -18,7 +17,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:qmasters:install.electron"
+    "onCommand:qmasters:install.electron",
+    "onCommand:qmasters:run.electron"
   ],
   "publisher": "qmasters",
   "contributes": {
@@ -26,6 +26,11 @@
       {
         "command": "qmasters:install.electron",
         "title": "install electron",
+        "category": "QMasters"
+      },
+      {
+        "command": "qmasters:run.electron",
+        "title": "run electron app",
         "category": "QMasters"
       }
     ]
@@ -37,7 +42,6 @@
     "@types/vscode": "1.52.0",
     "electron": "11.1.1",
     "eslint": "7.13.0",
-    "html-webpack-plugin": "5.0.0-alpha.14",
     "node-fetch": "2.6.1",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
