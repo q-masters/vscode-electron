@@ -1,13 +1,9 @@
-# Electron in Vscode
+# Install Electron via VSCode extension
 
-### install
+## Motivation
 
-```bash
-cd src && npm i
-```
+@todo
 
-### start
+## Usage
 
-```bash
-npm start
-```
+ctrl + p, then run command `>QMasters: install electron`
