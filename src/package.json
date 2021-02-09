@@ -2,7 +2,7 @@
   "name": "electron-vscode",
   "version": "0.0.0",
   "description": "electron installer in vscode extension",
-  "main": "./dist/vscode-electron-installer.js",
+  "main": "./dist/vscode-electron.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "vscode:prepublish": "rimraf ./dist && webpack --config ./bin/webpack-prod.config.js",

@@ -1,21 +1,21 @@
 
-import { inject, InjectionToken, singleton } from 'tsyringe'
+import { inject, singleton } from 'tsyringe'
 import { spawn, exec } from "child_process"
 import fetch from 'node-fetch'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
-import readline from "readline"
-
-export const ELECTRON_INSTALL_PATH: InjectionToken<string> = Symbol(`electron download path`)
-export const ELECTRON_VERSION: InjectionToken<string> = Symbol(`electron version`)
+import readline from 'readline'
+import * as vscode from 'vscode';
+import { ELECTRON_VERSION, ELECTRON_INSTALL_PATH, OUTPUT_CHANNEL } from './api'
 
 @singleton()
 export class ElectronInstaller {
 
     public constructor(
         @inject(ELECTRON_VERSION) private version: string,
-        @inject(ELECTRON_INSTALL_PATH) private installPath: string
+        @inject(ELECTRON_INSTALL_PATH) private installPath: string,
+        @inject(OUTPUT_CHANNEL) private output: vscode.OutputChannel
     ) {}
 
     /**
@@ -33,7 +33,7 @@ export class ElectronInstaller {
 
             await this.downloadElectron()
             await this.extractFile()
-            await this.finalizeInstallation()
+            this.finalizeInstallation()
         }
     }
 
@@ -109,7 +109,8 @@ export class ElectronInstaller {
      */
     private async downloadElectron(): Promise<void> {
 
-        console.log(`Start download from: ${this.resolveDownloadUrl()} ${os.EOL}`)
+        this.output.show();
+        this.output.appendLine(`Download from: ${this.resolveDownloadUrl()} ...`);
 
         const download    = await fetch(this.resolveDownloadUrl())
         const filename    = `electron.zip`
@@ -117,12 +118,17 @@ export class ElectronInstaller {
 
         download.body.pipe(fileStream)
 
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             fileStream.once('close', () => {
+                this.output.appendLine(`Download completed`);
                 resolve()
             })
 
-            fileStream.once('error', (err) => console.log(err))
+            fileStream.once('error', (err) => {
+                this.output.appendLine(`Error while downloading`);
+                this.output.append(JSON.stringify(err, null, 2));
+                reject();
+            })
         })
     }
 
@@ -131,11 +137,16 @@ export class ElectronInstaller {
      * write path.txt and delete electron.zip
      * 
      */
-    public async finalizeInstallation(): Promise<void> {
-        return new Promise((resolve) => {
-            this.writeExecutablePath(path.join(__dirname, this.installPath, this.resolvePlatformPath()))
-            fs.unlinkSync(path.join(__dirname, this.installPath, 'electron.zip'))
-        })
+    public finalizeInstallation(): void {
+
+        const zipFile = path.join(__dirname, this.installPath, 'electron.zip')
+        const execPath = path.join(__dirname, this.installPath, this.resolvePlatformPath())
+
+        this.output.appendLine(`Write executable path: ${execPath}`)
+        this.writeExecutablePath(execPath)
+
+        this.output.appendLine(`Finalize installation: remove file ${zipFile}`)
+        fs.unlinkSync(zipFile)
     }
 
     /**
@@ -156,6 +167,8 @@ export class ElectronInstaller {
 
         const source = path.resolve(__dirname, this.installPath, `electron.zip`)
         const outDir = path.join(__dirname, this.installPath)
+
+        this.output.appendLine(`extract file: ${source} to ${outDir}`)
 
         return new Promise((resolve, reject) => {
             const childProcess = spawn("tar", ["-zxvf", source, "-C", outDir], {stdio: "inherit"})

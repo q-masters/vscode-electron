@@ -3,7 +3,6 @@
 const path = require('path');
 
 module.exports = {
-    devtool: 'source-map',
     resolve: {
         // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
         extensions: ['.ts', '.js'],
@@ -28,7 +27,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(process.cwd(), 'dist'),
-        filename: "vscode-electron-installer.js",
+        filename: "vscode-electron.js",
         libraryTarget: 'commonjs2',
     },
     target: "node",
