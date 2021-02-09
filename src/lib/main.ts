@@ -20,7 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
          * install electron
          *
          */
-        vscode.commands.registerCommand('qmasters:install.electron', async () => {
+        vscode.commands.registerCommand('qmasters:electron.install', async () => {
             const isValid = await installer.validateInstallation();
             if (!isValid) {
                 await installer.install();
@@ -32,7 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
          * run electron
          *
          */
-        vscode.commands.registerCommand('qmasters:run.electron', async (file: string) => {
+        vscode.commands.registerCommand('qmasters:electron.run', async (file: string) => {
 
             const output = container.resolve(OUTPUT_CHANNEL);
             output.show();
