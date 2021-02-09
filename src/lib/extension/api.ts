@@ -1,6 +1,6 @@
 import { InjectionToken } from "tsyringe";
 import * as vscode from "vscode";
 
-export const OutputChannel: InjectionToken<vscode.OutputChannel> = Symbol('Extension Output Channel');
-export const ElectronVersion: InjectionToken<string> = Symbol('Electron version');
-export const ElectronInstallPath: InjectionToken<string> = Symbol('Electron install directory');
+export const ELECTRON_INSTALL_PATH: InjectionToken<string> = Symbol(`electron download path`)
+export const ELECTRON_VERSION: InjectionToken<string> = Symbol(`electron version`)
+export const OUTPUT_CHANNEL: InjectionToken<vscode.OutputChannel> = Symbol(`Output channel`)

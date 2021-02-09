@@ -2,10 +2,10 @@
   "name": "electron-vscode",
   "version": "0.0.0",
   "description": "electron installer in vscode extension",
-  "main": "./dist/extension.js",
+  "main": "./dist/vscode-electron.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "vscode:prepublish": "rimraf ./dist && webpack --config ./bin/webpack.conf.js --mode production",
+    "vscode:prepublish": "rimraf ./dist && webpack --config ./bin/webpack-prod.config.js",
     "prebuild": "rimraf ./dist",
     "prestart": "rimraf ./dist",
     "build": "webpack --config ./bin/webpack.config.js",
@@ -18,14 +18,15 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:MyExtension.helloElectron"
+    "onCommand:qmasters:install.electron"
   ],
+  "publisher": "qmasters",
   "contributes": {
     "commands": [
       {
-        "command": "MyExtension.helloElectron",
-        "title": "start electron",
-        "category": "MyExtension"
+        "command": "qmasters:install.electron",
+        "title": "install electron",
+        "category": "QMasters"
       }
     ]
   },

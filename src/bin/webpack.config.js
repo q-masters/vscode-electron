@@ -34,7 +34,7 @@ const extension = {
     },
     output: {
         path: path.resolve(process.cwd(), 'dist'),
-        filename: "extension.js",
+        filename: "vscode-electron.js",
         libraryTarget: 'commonjs2',
     },
     target: "node",
