@@ -15,7 +15,7 @@ module.exports = {
                     {
                         loader: 'ts-loader',
                         options: {
-                            configFile: path.resolve(process.cwd(), "./tsconfig.json")
+                            configFile: path.resolve(process.cwd(), './tsconfig.json')
                         }
                     }
                 ]
@@ -27,12 +27,12 @@ module.exports = {
     },
     output: {
         path: path.resolve(process.cwd(), 'dist'),
-        filename: "vscode-electron.js",
+        filename: 'vscode-electron.js',
         libraryTarget: 'commonjs2',
     },
-    target: "node",
+    target: 'node',
     entry: {
-        "main": './lib/extension/main.ts'
+        main: './lib/main.ts'
     },
-    mode: "production"
+    mode: 'production'
 };

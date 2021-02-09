@@ -12,6 +12,8 @@ import { ELECTRON_VERSION, ELECTRON_INSTALL_PATH, OUTPUT_CHANNEL } from './api'
 @singleton()
 export class ElectronInstaller {
 
+    private isAvailable = false;
+
     public constructor(
         @inject(ELECTRON_VERSION) private version: string,
         @inject(ELECTRON_INSTALL_PATH) private installPath: string,
@@ -41,29 +43,16 @@ export class ElectronInstaller {
      * validate electron installation
      *
      */
-    public async validateInstallation() {
-
-        const installDir = path.resolve(__dirname, this.installPath)
-        const electronCommand = await this.resolveElectronCommand()
-
-        if (!electronCommand) {
-            return false
-        }
-
-        const versionFilePath = path.resolve(installDir, "version")
-        if (!fs.existsSync(versionFilePath) || fs.statSync(versionFilePath).isFile) {
-            return false
-        }
-
-        const version = await this.readElectronVersion()
-        return version === this.version
+    public async validateInstallation(): Promise<boolean> {
+        return this.isElectronAvailable();
     }
 
     /**
      * get current electron version
      *
      */
-    private async readElectronVersion(): Promise<string | null> {
+    public async readElectronVersion(): Promise<string | null> {
+
         return new Promise((resolve, reject) => {
             const versionFile = path.resolve(__dirname, this.installPath, 'version')
 
@@ -84,8 +73,8 @@ export class ElectronInstaller {
      */
     public resolveElectronCommand(): Promise<string | null> {
 
-        return new Promise((resolve, reject) => {
-            const pathFile = path.resolve(__dirname, 'path.txt')
+        return new Promise((resolve) => {
+            const pathFile = path.resolve(__dirname, 'path')
 
             if (!fs.existsSync(pathFile) || !fs.statSync(pathFile).isFile) {
                 return resolve(null)
@@ -204,6 +193,10 @@ export class ElectronInstaller {
      */
     private async isElectronAvailable(): Promise<boolean> {
 
+        if (this.isAvailable) {
+            return true;
+        }
+
         const command = await this.resolveElectronCommand()
         const available = await new Promise<boolean>((resolve) => {
             exec(`${command ?? `electron`} --version`, (err) => {
@@ -211,7 +204,8 @@ export class ElectronInstaller {
                     const command  = os.platform() === 'win32' ? 'electron.cmd' : 'electron'
                     this.writeExecutablePath(command)
                 }
-                resolve(err === null)
+                this.isAvailable = err === null;
+                resolve(this.isAvailable)
             })
         })
 
@@ -221,7 +215,8 @@ export class ElectronInstaller {
 
             if (fs.existsSync(applicationsPath) && fs.statSync(applicationsPath).isFile()) {
                 this.writeExecutablePath(applicationsPath)
-                return true
+                this.isAvailable = true;
+                return this.isAvailable;
             }
         }
 
@@ -233,7 +228,7 @@ export class ElectronInstaller {
      *
      */
     private writeExecutablePath(location: string) {
-        const pathTxt = path.resolve(__dirname, 'path.txt')
+        const pathTxt = path.resolve(__dirname, 'path')
         const pathTxt$ = fs.createWriteStream(pathTxt)
         pathTxt$.write(location)
         pathTxt$.close()
