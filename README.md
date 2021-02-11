@@ -30,13 +30,14 @@ This is more designed as a service, that means you can install electron but it w
 
 ## Commands
 
-|name|params|description|
-|-|-|-|
-|qmasters:electron.install|-|checks for a valid installation and install electron is nothing exists|
-|qmasters:electron.run|file path|file to execute [@example](https://github.com/electron/electron-quick-start/blob/master/main.js)|
+|name|params|type|description|
+|-|-|-|-|
+|qmasters:electron.install|-|void|checks for a valid installation and install electron is nothing exists|
+|qmasters:electron.run|string, \[...string\[\]\]|ChildProcess|filepath which should executed [@example](https://github.com/electron/electron-quick-start/blob/master/main.js), additional params which should passed to electron app|
 
 ## Development
 
 - go into src directory
 - npm install
 - start extension via F5 inside of vscode
+
