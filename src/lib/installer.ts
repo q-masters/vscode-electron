@@ -6,7 +6,7 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 import readline from 'readline'
-import * as vscode from 'vscode';
+import * as vscode from 'vscode'
 import { ELECTRON_VERSION, ELECTRON_INSTALL_PATH, OUTPUT_CHANNEL } from './api'
 
 @singleton()
@@ -27,6 +27,8 @@ export class ElectronInstaller {
     public async install(): Promise<void> {
         const isAvailable = await this.isElectronAvailable()
 
+        this.output.show()
+
         if (!isAvailable) {
             const installDir = path.resolve(__dirname, this.installPath)
             if (!fs.existsSync(installDir)) {
@@ -36,7 +38,12 @@ export class ElectronInstaller {
             await this.downloadElectron()
             await this.extractFile()
             this.finalizeInstallation()
+
+            this.output.appendLine('installation completed')
+            return;
         }
+
+        this.output.appendLine(`electron allready installed`)
     }
 
     /**
@@ -98,8 +105,7 @@ export class ElectronInstaller {
      */
     private async downloadElectron(): Promise<void> {
 
-        this.output.show();
-        this.output.appendLine(`Download from: ${this.resolveDownloadUrl()} ...`);
+        this.output.appendLine(`Download from: ${this.resolveDownloadUrl()} ...`)
 
         const download    = await fetch(this.resolveDownloadUrl())
         const filename    = `electron.zip`
@@ -109,14 +115,14 @@ export class ElectronInstaller {
 
         return new Promise((resolve, reject) => {
             fileStream.once('close', () => {
-                this.output.appendLine(`Download completed`);
+                this.output.appendLine(`Download completed`)
                 resolve()
             })
 
             fileStream.once('error', (err) => {
-                this.output.appendLine(`Error while downloading`);
-                this.output.append(JSON.stringify(err, null, 2));
-                reject();
+                this.output.appendLine(`Error while downloading`)
+                this.output.append(JSON.stringify(err, null, 2))
+                reject()
             })
         })
     }
@@ -204,7 +210,7 @@ export class ElectronInstaller {
                     const command  = os.platform() === 'win32' ? 'electron.cmd' : 'electron'
                     this.writeExecutablePath(command)
                 }
-                this.isAvailable = err === null;
+                this.isAvailable = err === null
                 resolve(this.isAvailable)
             })
         })
@@ -215,8 +221,8 @@ export class ElectronInstaller {
 
             if (fs.existsSync(applicationsPath) && fs.statSync(applicationsPath).isFile()) {
                 this.writeExecutablePath(applicationsPath)
-                this.isAvailable = true;
-                return this.isAvailable;
+                this.isAvailable = true
+                return this.isAvailable
             }
         }
 
