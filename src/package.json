@@ -51,7 +51,7 @@
     "node-fetch": "2.6.1",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
-    "ts-loader": "8.0.16",
+    "ts-loader": "8.0.17",
     "tsyringe": "4.4.0",
     "typescript": "4.1.3",
     "vsce": "^1.85.0",
