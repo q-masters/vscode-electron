@@ -13,9 +13,13 @@ export class ElectronInstaller {
 
     private _latestVersion: string = "";
 
-    private installedVersions: string[] = [];
+    private installedVersions: string[] = []
 
-    private checkedInstalledVersions = false;
+    private checkedInstalledVersions = false
+
+    private installedMap: Map<string, string> = new Map()
+
+    private installedMapInitialized = false
 
     public constructor(
         @inject(ELECTRON_INSTALL_PATH) private installPath: string,
@@ -34,7 +38,7 @@ export class ElectronInstaller {
             return Promise.resolve(this.installedVersions)
         }
 
-        const global = this.resolveGlobalElectron().then(([version]) => [version]);
+        const global = this.resolveGlobalElectron().then(([version]) => [version])
         const local =  new Promise<string[]>((resolve, reject) => {
             const versionsPath = path.resolve(__dirname, 'versions')
             fs.readFile(versionsPath, {encoding: 'utf8'}, (err, data) => {
@@ -52,11 +56,30 @@ export class ElectronInstaller {
     }
 
     /**
+     * resolve electron command by passed version
+     *
+     */
+    resolveElectronCommand(version?: string): string | undefined {
+        const versionRequired = version ?? this.latestVersion;
+        if (!this.installedMapInitialized) {
+            const versionsPath = path.resolve(__dirname, 'versions')
+            try {
+                const data: {[key: string]: string} = JSON.parse(fs.readFileSync(versionsPath, {encoding: "utf8"}).toString())
+                Object.keys(data).forEach((key) => this.installedMap.set(key, data[key]))
+                this.installedMapInitialized = true
+            } catch (error) {
+                vscode.window.showErrorMessage(`could not find electron version ${versionRequired}`)
+            }
+        }
+        return this.installedMap.get(versionRequired)
+    }
+
+    /**
      * set latest version
      *
      */
     set latestVersion(version: string) {
-        this._latestVersion = version;
+        this._latestVersion = version
     }
 
     /**
@@ -203,10 +226,11 @@ export class ElectronInstaller {
             })
             .then(([version, command]) => {
                 if (!version) {
-                    return [];
+                    return []
                 }
-                this.writeVersion(version, command);
-                return [version, command];
+
+                this.installedMap.set(version, command)
+                return [version, command]
             })
     }
 
@@ -265,7 +289,9 @@ export class ElectronInstaller {
         } catch(error) {
             data = {}
         }
-        data[version] = executablePath;
-        fs.writeFileSync(versionsPath, JSON.stringify(data, null, 2));
+
+        data[version] = executablePath
+        this.installedMap.set(version, executablePath)
+        fs.writeFileSync(versionsPath, JSON.stringify(data, null, 2))
     }
 }

@@ -1,9 +1,6 @@
 import { container, inject, singleton } from "tsyringe"
 import { ElectronInstaller } from "./installer"
 import { spawn, ChildProcess } from "child_process"
-import * as path from "path"
-import * as fs from "fs"
-import * as vscode from "vscode"
 import { DATA_NODE, ELECTRON_ENV_VARS, OUTPUT_CHANNEL } from "./api"
 
 @singleton()
@@ -46,28 +43,11 @@ export class ElectronManager {
     }
 
     /**
-     * resolve electron command by passed version
-     *
-     */
-    private resolveElectronCommand(version?: string): string | undefined {
-        const versionRequired = version ?? this.installer.latestVersion;
-        const versionsPath = path.resolve(__dirname, 'versions')
-
-        try {
-            const data = JSON.parse(fs.readFileSync(versionsPath, {encoding: "utf8"}).toString())
-            return data[versionRequired]
-        } catch (error) {
-            vscode.window.showErrorMessage(`could not find electron version ${versionRequired}`)
-            return void 0;
-        }
-    }
-
-    /**
      * spawns a new electron process and adds to process map
      *
      */
     private spawnElectronProcess(file: string, version?: string, ...args: string[]): ChildProcess | undefined {
-        const command = this.resolveElectronCommand(version);
+        const command = this.installer.resolveElectronCommand(version);
         if (command) {
             const electronProcess = spawn(command, [file, ...args], {env: this.envVars, stdio: ['ipc']})
             this.processMap.set(file, electronProcess)
