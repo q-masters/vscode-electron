@@ -33,15 +33,43 @@ This is more designed as a service, that means you can install electron but it w
 CommandParams
 
 ```ts
-type EventParams = ...string[] | { version: string, args: string[] }
+type EventParams = ...string[] | { version: string, params: string[] }
 ```
 
 ## Commands
 
-|name|params|return value|description|
-|-|-|-|-|
-|qmasters:electron.install|[version:string]|boolean| install passed version of electron for example v11.2.0. Default latest version which can found for electron|
-|qmasters:electron.run|EventParams|ChildProcess| starts electron app in specific version, all arguments passed as **...string[]** will directly passed to electron as command line arguments. Alternate to use a specific version use **{ version: string, args: string[]}** for example **{ version: "v11.2.0", args: ["file_to_execute.js", "second param"]}**. It will allways check the version which should be used is installed, if not it will install directly. If no version is passed it will take allways the latest version and install if required.| 
+### qmasters:electron-install
+
+install: electron in specifc version if not exists
+
+#### @params
+[version:string]
+
+#### @return
+string version which has been installed
+
+### qmasters:electron-run
+
+Starts electron with passed file. Second parameter is optional, if it passed as **...string[]** it will use the latest version which can be found for electron, all params will passed as command line arguments to electron.
+
+To run in a specific version pass an object as second param
+
+```ts
+{
+   version: string,
+   params: string[]
+}
+```
+
+In both cases if electron in this version could not be found, latest electron version or passed one, it will install the required version.
+
+#### @params
+
+file: string, [EventParams]
+
+#### @return
+ChildProcess
+
 ## Development
 
 - go into src directory
