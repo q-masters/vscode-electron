@@ -1,6 +1,6 @@
 {
   "name": "electron-vscode",
-  "version": "0.0.0",
+  "version": "1.2.0",
   "description": "electron installer in vscode extension",
   "main": "./dist/vscode-electron.js",
   "displayName": "Electron VsCode",
@@ -11,7 +11,10 @@
     "prestart": "rimraf ./dist",
     "build": "webpack --config ./bin/webpack.config.js"
   },
-  "keywords": ["electron", "vscode"],
+  "keywords": [
+    "electron",
+    "vscode"
+  ],
   "engines": {
     "vscode": "^1.52.0"
   },
@@ -22,32 +25,16 @@
     "type": "git",
     "url": "https://github.com/q-masters/vscode-electron"
   },
-  "activationEvents": [
-    "onCommand:qmasters:electron.install",
-    "onCommand:qmasters:electron.run"
-  ],
+  "activationEvents": ["*"],
   "publisher": "q-masters",
-  "contributes": {
-    "commands": [
-      {
-        "command": "qmasters:electron.install",
-        "title": "install electron",
-        "category": "QMasters"
-      },
-      {
-        "command": "qmasters:electron.run",
-        "title": "run electron app",
-        "category": "QMasters"
-      }
-    ]
-  },
   "author": "Ralf Hannuschka",
   "license": "ISC",
   "devDependencies": {
     "@types/node-fetch": "2.5.8",
+    "@types/rimraf": "^3.0.0",
     "@types/vscode": "1.52.0",
     "electron": "11.2.3",
-    "eslint": "7.19.0",
+    "eslint": "7.20.0",
     "node-fetch": "2.6.1",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
