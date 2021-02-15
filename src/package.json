@@ -1,6 +1,6 @@
 {
   "name": "electron-vscode",
-  "version": "1.2.0",
+  "version": "0.0.0",
   "description": "electron installer in vscode extension",
   "main": "./dist/vscode-electron.js",
   "displayName": "Electron VsCode",
