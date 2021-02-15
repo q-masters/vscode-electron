@@ -56,25 +56,6 @@ export class ElectronInstaller {
     }
 
     /**
-     * resolve electron command by passed version
-     *
-     */
-    resolveElectronCommand(version?: string): string | undefined {
-        const versionRequired = version ?? this.latestVersion;
-        if (!this.installedMapInitialized) {
-            const versionsPath = path.resolve(__dirname, 'versions')
-            try {
-                const data: {[key: string]: string} = JSON.parse(fs.readFileSync(versionsPath, {encoding: "utf8"}).toString())
-                Object.keys(data).forEach((key) => this.installedMap.set(key, data[key]))
-                this.installedMapInitialized = true
-            } catch (error) {
-                vscode.window.showErrorMessage(`could not find electron version ${versionRequired}`)
-            }
-        }
-        return this.installedMap.get(versionRequired)
-    }
-
-    /**
      * set latest version
      *
      */
@@ -131,6 +112,25 @@ export class ElectronInstaller {
             this.latestVersion = body.tag_name as string
         }
         return this.latestVersion
+    }
+
+    /**
+     * resolve electron command by passed version
+     *
+     */
+    resolveElectronCommand(version?: string): string | undefined {
+        const versionRequired = version ?? this.latestVersion;
+        if (!this.installedMapInitialized) {
+            const versionsPath = path.resolve(__dirname, 'versions')
+            try {
+                const data: {[key: string]: string} = JSON.parse(fs.readFileSync(versionsPath, {encoding: "utf8"}).toString())
+                Object.keys(data).forEach((key) => this.installedMap.set(key, data[key]))
+            } catch (error) {
+                vscode.window.showErrorMessage(`could not find electron version ${versionRequired}`)
+            }
+            this.installedMapInitialized = true
+        }
+        return this.installedMap.get(versionRequired)
     }
 
     /**
