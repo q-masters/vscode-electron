@@ -3,7 +3,7 @@ import { container } from "tsyringe";
 import * as vscode from "vscode";
 import { ELECTRON_ENV_VARS, ELECTRON_INSTALL_PATH, OUTPUT_CHANNEL } from "./api";
 
-import { ElectronInstaller } from "./installer";
+import { ElectronInstaller } from "./electron-installer";
 import { ElectronManager } from "./manager";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -24,6 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     const installer = container.resolve(ElectronInstaller)
     const electronManager = container.resolve(ElectronManager)
+
+    electronManager.removeUnusedElectron()
 
     let disposables = [
         /**

@@ -1,6 +1,6 @@
 {
   "name": "electron-vscode",
-  "version": "0.0.0",
+  "version": "1.3.0",
   "description": "electron installer in vscode extension",
   "main": "./dist/vscode-electron.js",
   "displayName": "Electron VsCode",
@@ -25,7 +25,9 @@
     "type": "git",
     "url": "https://github.com/q-masters/vscode-electron"
   },
-  "activationEvents": ["*"],
+  "activationEvents": [
+    "*"
+  ],
   "publisher": "q-masters",
   "author": "Ralf Hannuschka",
   "license": "ISC",
@@ -33,6 +35,7 @@
     "@types/node-fetch": "2.5.8",
     "@types/rimraf": "^3.0.0",
     "@types/vscode": "1.52.0",
+    "del": "^6.0.0",
     "electron": "11.2.3",
     "eslint": "7.20.0",
     "node-fetch": "2.6.1",
