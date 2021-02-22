@@ -33,7 +33,7 @@
     "@types/node-fetch": "2.5.8",
     "@types/rimraf": "^3.0.0",
     "@types/vscode": "1.52.0",
-    "electron": "11.2.3",
+    "electron": "11.3.0",
     "eslint": "7.20.0",
     "node-fetch": "2.6.1",
     "reflect-metadata": "0.1.13",
