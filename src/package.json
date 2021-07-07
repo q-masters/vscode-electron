@@ -30,7 +30,7 @@
   "author": "Ralf Hannuschka",
   "license": "ISC",
   "devDependencies": {
-    "@types/node-fetch": "2.5.10",
+    "@types/node-fetch": "2.5.11",
     "@types/rimraf": "^3.0.0",
     "@types/vscode": "1.52.0",
     "electron": "12.0.6",
